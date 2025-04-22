@@ -51,13 +51,14 @@ model Employee {
   job            Job            @relation(fields: [jobId], references: [id])
   employeeType   EmployeeType
   employeeStatus EmployeeStatus
+  attendance     Attendance[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 }
 
 model Account {
   id        String    @id @default(cuid())
-  username  String   @unique
+  username  String    @unique
   password  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -65,17 +66,28 @@ model Account {
 }
 
 model Job {
-  id String @id @default(cuid())
-  title String @unique
-  description String
+  id            String      @id @default(cuid())
+  title         String      @unique
+  description   String
   jobCategoryId String
-  jobCategory JobCategory @relation(fields: [jobCategoryId], references: [id])
-  employees Employee[]
+  jobCategory   JobCategory @relation(fields: [jobCategoryId], references: [id])
+  employees     Employee[]
 }
 
 model JobCategory {
-  id String @id @default(cuid())
-  name String @unique
+  id          String @id @default(cuid())
+  name        String @unique
   description String
-  jobs Job[]
+  jobs        Job[]
+}
+
+model Attendance {
+  id               String           @id @default(cuid())
+  employeeId       String
+  employee         Employee         @relation(fields: [employeeId], references: [id])
+  time_in          DateTime         @default(now())
+  attendanceStatus AttendanceStatus
+  remark           String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 }
