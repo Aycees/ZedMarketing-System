@@ -1,34 +1,48 @@
-import { Injectable, NotFoundException, HttpStatus, HttpException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpStatus,
+  HttpException,
+  BadRequestException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AccountsService {
-  constructor(private prismaService: PrismaService ) {}
-  
+  constructor(private prismaService: PrismaService) {}
+
   async create(createAccountDto: CreateAccountDto) {
+    const existingUsername = await this.prismaService.account.findUnique({
+      where: {
+        username: createAccountDto.username,
+      },
+    });
+
+    if (existingUsername) {
+      throw new BadRequestException('Username already exists');
+    }
+
     try {
+      const hashedPassword = await bcrypt.hash(createAccountDto.password, 10);
       const createAccount = await this.prismaService.account.create({
         data: {
-          ...createAccountDto
-        }
+          ...createAccountDto,
+          password: hashedPassword,
+        },
       });
-
-      if (!createAccount) {
-        throw new BadRequestException('Account creation failed');
-      }
 
       return {
         statusCode: HttpStatus.CREATED,
         message: 'Account created successfully',
         data: createAccount,
       };
-
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  };
+  }
 
   async findAll() {
     try {
@@ -45,18 +59,79 @@ export class AccountsService {
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async findOne(id: string) {
+    try {
+      const account = await this.prismaService.account.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!account) {
+        throw new NotFoundException(`No account found`);
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Account retrieved successfully',
+        data: account,
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
+  async update(id: string, updateAccountDto: UpdateAccountDto) {
+    const account = await this.prismaService.account.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(updateAccountDto.password, 10);
+      const updateAccount = await this.prismaService.account.update({
+        where: {
+          id: id,
+        },
+        data: {
+          ...updateAccountDto,
+          password: hashedPassword,
+        },
+      });
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Account updated successfully',
+        data: updateAccount,
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
+  async remove(id: string) {
+    try {
+      const deletedAccount = await this.prismaService.account.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Account deleted successfully',
+        data: deletedAccount,
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
