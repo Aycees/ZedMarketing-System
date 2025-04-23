@@ -99,7 +99,7 @@ export class AccountsService {
       const hashedPassword = await bcrypt.hash(updateAccountDto.password, 10);
       const updateAccount = await this.prismaService.account.update({
         where: {
-          id: id,
+          id: account.id,
         },
         data: {
           ...updateAccountDto,

@@ -17,18 +17,18 @@ export class JobCategoriesController {
     return this.jobCategoriesService.findAll();
   }
 
-  @Get(':id')
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
-    return this.jobCategoriesService.findOne(+id);
+    return this.jobCategoriesService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateJobCategoryDto: UpdateJobCategoryDto) {
-    return this.jobCategoriesService.update(+id, updateJobCategoryDto);
+    return this.jobCategoriesService.update(id, updateJobCategoryDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.jobCategoriesService.remove(+id);
+  @Patch('archive/:id')
+  archiveCategory(@Param('id') id: string) {
+    return this.jobCategoriesService.archiveCategory(id);
   }
 }

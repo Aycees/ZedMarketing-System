@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Min, MinLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Min, MinLength } from "class-validator";
 
 export class CreateJobCategoryDto {
     @IsString()
@@ -10,4 +10,8 @@ export class CreateJobCategoryDto {
     @IsOptional()
     @MinLength(1, { message: 'Name must be more than 1 character long.'})
     description: string
+
+    @IsBoolean()
+    @IsOptional()
+    isArchived: boolean;
 }
