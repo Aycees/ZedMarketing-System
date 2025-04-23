@@ -12,10 +12,10 @@ export class CreateJobDto {
     description: string;
 
     @IsString()
-    @IsUUID()
+    @IsOptional()
     jobCategoryId: string;
 
     @IsBoolean()
     @IsOptional()
-    isArchived: Boolean;
+    isArchived: boolean;
 }

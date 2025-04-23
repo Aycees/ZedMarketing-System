@@ -78,7 +78,7 @@ export class JobCategoriesService {
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    } 
   }
 
   async update(id: string, updateJobCategoryDto: UpdateJobCategoryDto) {
@@ -123,14 +123,14 @@ export class JobCategoriesService {
       throw new NotFoundException('Category not found');
     }
 
-    const { isArchived, ...rest } = category;
+    const { isArchived, ...categoryData } = category;
     try {
       const archiveCategory = await this.prismaService.jobCategory.update({
         where: {
           id: id,
         },
         data: {
-          ...rest,
+          ...categoryData,
           isArchived: !isArchived,
         },
       });

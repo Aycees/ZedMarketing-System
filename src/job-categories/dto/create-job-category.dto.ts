@@ -9,7 +9,7 @@ export class CreateJobCategoryDto {
     @IsString()
     @IsOptional()
     @MinLength(1, { message: 'Name must be more than 1 character long.'})
-    description: string
+    description: string;
 
     @IsBoolean()
     @IsOptional()
