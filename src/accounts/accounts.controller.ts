@@ -27,8 +27,8 @@ export class AccountsController {
     return this.accountsService.update(id, updateAccountDto);
   }
 
-  @Delete('remove/:id')
-  remove(@Param('id') id: string) {
-    return this.accountsService.remove(id);
+  @Patch('archive/:id')
+  archiveAccount(@Param('id') id: string) {
+    return this.accountsService.archiveAccount(id);
   }
 }

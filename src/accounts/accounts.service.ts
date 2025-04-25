@@ -117,18 +117,32 @@ export class AccountsService {
     }
   }
 
-  async remove(id: string) {
+  async archiveAccount(id: string) {
+    const account = await this.prismaService.account.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
+    const { isArchived, ...accountData } = account;
     try {
-      const deletedAccount = await this.prismaService.account.delete({
+      const archiveAccount = this.prismaService.account.update({
         where: {
-          id: id,
+          id: account.id,
+        },
+        data: {
+          ...accountData,
+          isArchived: !isArchived,
         },
       });
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Account deleted successfully',
-        data: deletedAccount,
+        message: 'Account un/archive successfully',
+        data: archiveAccount,
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
