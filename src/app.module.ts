@@ -6,10 +6,11 @@ import { SupabaseModule } from './supabase/supabase.module';
 import { JobsModule } from './jobs/jobs.module';
 import { JobCategoriesModule } from './job-categories/job-categories.module';
 import { AuthModule } from './auth/auth.module';
+import { EmployeesModule } from './employees/employees.module';
 
 
 @Module({
-  imports: [AccountsModule, SupabaseModule, AuthModule, JobsModule, JobCategoriesModule],
+  imports: [AccountsModule, SupabaseModule, AuthModule, JobsModule, JobCategoriesModule, EmployeesModule],
   controllers: [AppController],
   providers: [AppService],
 })
