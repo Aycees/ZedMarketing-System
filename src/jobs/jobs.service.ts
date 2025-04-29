@@ -49,7 +49,11 @@ export class JobsService {
 
   async findAll() {
     try {
-      const allJob = await this.prismaService.job.findMany();
+      const allJob = await this.prismaService.job.findMany({
+        where: {
+          isArchived: false
+        }
+      });
 
       if (!allJob || allJob.length === 0) {
         throw new NotFoundException('No jobs found');
@@ -89,11 +93,8 @@ export class JobsService {
 
   async update(id: string, updateJobDto: UpdateJobDto) {
     const { jobCategoryId, ...jobData } = updateJobDto;
-    const job = await this.prismaService.job.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    
+    const job = await this.findOne(id);
 
     if (!job) {
       throw new NotFoundException('Job not found');
@@ -102,7 +103,7 @@ export class JobsService {
     try {
       const updateJob = await this.prismaService.job.update({
         where: {
-          id: job.id,
+          id: id,
         },
         data: {
           ...jobData,
