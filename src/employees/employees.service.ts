@@ -156,7 +156,7 @@ export class EmployeesService {
 
       return {
         statusCode: HttpStatus.OK,
-        message: 'Category updated successfully',
+        message: 'Attendance updated successfully',
         data: archiveEmployee,
       };
     } catch (error) {

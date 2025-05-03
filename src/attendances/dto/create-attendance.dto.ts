@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 enum AttendanceStatus {
     PRESENT = "PRESENT",
@@ -23,4 +23,7 @@ export class CreateAttendanceDto {
     @IsString()
     @IsOptional()
     remark: string;
+    
+    @IsBoolean()
+    isArchived: boolean;
 }

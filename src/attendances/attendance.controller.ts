@@ -17,18 +17,18 @@ export class AttendanceController {
     return this.attendanceService.findAll();
   }
 
-  @Get(':id')
+  @Get('update/:id')
   findOne(@Param('id') id: string) {
-    return this.attendanceService.findOne(+id);
+    return this.attendanceService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-    return this.attendanceService.update(+id, updateAttendanceDto);
+    return this.attendanceService.update(id, updateAttendanceDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.attendanceService.remove(+id);
+  @Patch('archive/:id')
+  archiveAttendance(@Param('id') id: string) {
+    return this.attendanceService.archiveAttendance(id);
   }
 }

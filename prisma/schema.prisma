@@ -96,6 +96,7 @@ model Attendance {
   time_in          DateTime         @default(now())
   attendanceStatus AttendanceStatus
   remark           String?
+  isArchived       Boolean          @default(false)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 }
