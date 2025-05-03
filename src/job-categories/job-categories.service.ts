@@ -43,7 +43,11 @@ export class JobCategoriesService {
 
   async findAll() {
     try {
-      const allCategory = await this.prismaService.jobCategory.findMany();
+      const allCategory = await this.prismaService.jobCategory.findMany({
+        where: {
+          isArchived: false
+        }
+      });
 
       if (!allCategory || allCategory.length === 0) {
         throw new NotFoundException('No categories found');
