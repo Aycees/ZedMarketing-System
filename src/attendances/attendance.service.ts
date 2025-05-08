@@ -90,10 +90,7 @@ export class AttendanceService {
 
   async update(id: string, updateAttendanceDto: UpdateAttendanceDto) {
     const attendance = await this.findOne(id);
-    if (!attendance) {
-      throw new NotFoundException('Attendance not found');
-    }
-    
+
     const { time_in, ...updateData } = updateAttendanceDto;
 
     try {
