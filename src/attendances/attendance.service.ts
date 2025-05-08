@@ -14,15 +14,19 @@ export class AttendanceService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createAttendanceDto: CreateAttendanceDto) {
-    const { employeeId, ...attendanceData } = createAttendanceDto;
-    const dateOnly = createAttendanceDto.time_in.toISOString().split('T')[0];
+    const { employeeId, time_in, ...attendaceData } = createAttendanceDto;
+    const dateOnly = new Date(time_in).toISOString().split('T')[0];
+    
     const existingAttendance = await this.prismaService.attendance.findFirst({
       where: {
-        employeeId: employeeId,
-        time_in: new Date(dateOnly),
+        employeeId,
+        time_in: {
+          gte: new Date(`${dateOnly}T00:00:00Z`),
+          lt: new Date(`${dateOnly}T23:59:59Z`),
+        },
       },
     });
-
+    
     if (existingAttendance) {
       throw new BadRequestException('Attendance already exists.');
     }
@@ -31,7 +35,8 @@ export class AttendanceService {
       const createAttendance = await this.prismaService.attendance.create({
         data: {
           employeeId,
-          ...attendanceData,
+          time_in: new Date(time_in),
+          ...attendaceData,
         },
       });
 

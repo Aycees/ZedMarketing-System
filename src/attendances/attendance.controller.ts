@@ -3,11 +3,11 @@ import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 
-@Controller('attendance')
+@Controller('attendances')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() createAttendanceDto: CreateAttendanceDto) {
     return this.attendanceService.create(createAttendanceDto);
   }
@@ -17,7 +17,7 @@ export class AttendanceController {
     return this.attendanceService.findAll();
   }
 
-  @Get('update/:id')
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
     return this.attendanceService.findOne(id);
   }

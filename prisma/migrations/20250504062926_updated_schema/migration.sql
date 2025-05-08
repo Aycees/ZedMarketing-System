@@ -1,14 +1,14 @@
 -- CreateEnum
-CREATE TYPE "EmployeeType" AS ENUM ('FullTime', 'PartTime');
+CREATE TYPE "EmployeeType" AS ENUM ('FULL_TIME', 'PART_TIME');
 
 -- CreateEnum
-CREATE TYPE "AttendanceStatus" AS ENUM ('Present', 'Absent', 'Late', 'HalfDay');
+CREATE TYPE "AttendanceStatus" AS ENUM ('PRESENT', 'ABSENT', 'LATE', 'HALF_DAY');
 
 -- CreateEnum
-CREATE TYPE "LRStatus" AS ENUM ('Approved', 'Rejected', 'Pending');
+CREATE TYPE "LRStatus" AS ENUM ('APPROVED', 'REJECTED', 'PENDING');
 
 -- CreateEnum
-CREATE TYPE "EmployeeStatus" AS ENUM ('Active', 'Inactive', 'OnLeave');
+CREATE TYPE "EmployeeStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'ON_LEAVE');
 
 -- CreateTable
 CREATE TABLE "Employee" (
@@ -19,9 +19,10 @@ CREATE TABLE "Employee" (
     "address" TEXT NOT NULL,
     "contactNumber" TEXT NOT NULL,
     "accountId" TEXT,
-    "jobId" TEXT NOT NULL,
+    "jobId" TEXT,
     "employeeType" "EmployeeType" NOT NULL,
     "employeeStatus" "EmployeeStatus" NOT NULL,
+    "isArchived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -69,9 +70,11 @@ CREATE TABLE "JobCategory" (
 CREATE TABLE "Attendance" (
     "id" TEXT NOT NULL,
     "employeeId" TEXT NOT NULL,
-    "time_in" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date" TIMESTAMP(3) NOT NULL,
+    "time_in" TIMESTAMP(3) NOT NULL,
     "attendanceStatus" "AttendanceStatus" NOT NULL,
     "remark" TEXT,
+    "isArchived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -90,11 +93,14 @@ CREATE UNIQUE INDEX "Job_title_key" ON "Job"("title");
 -- CreateIndex
 CREATE UNIQUE INDEX "JobCategory_name_key" ON "JobCategory"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Attendance_date_key" ON "Attendance"("date");
+
 -- AddForeignKey
 ALTER TABLE "Employee" ADD CONSTRAINT "Employee_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Job" ADD CONSTRAINT "Job_jobCategoryId_fkey" FOREIGN KEY ("jobCategoryId") REFERENCES "JobCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
