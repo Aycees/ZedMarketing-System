@@ -92,10 +92,11 @@ model JobCategory {
 model Attendance {
   id               String           @id @default(cuid())
   employeeId       String
-  employee         Employee         @relation(fields: [employeeId], references: [id])
-  time_in          DateTime         @default(now())
+  employee         Employee         @relation(fields: [employeeId], references: [id])     
+  time_in          DateTime         
   attendanceStatus AttendanceStatus
   remark           String?
+  isArchived       Boolean          @default(false)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 }
