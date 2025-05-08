@@ -5,16 +5,39 @@ const prisma = new PrismaService();
 
 async function main() {
   const hashedPassword = await bcrypt.hash('password', 10);
-  const seedAccount = await prisma.account.upsert({
-    where: { username: 'testUsername' },
-    update: {},
-    create: {
-      username: 'username',
-      password: hashedPassword,
+  const jobCategory = await prisma.jobCategory.create({
+    data: {
+      name: 'Routing',
+      description: 'Assigned for Routing',
       isArchived: false,
     },
   });
-  console.log(seedAccount);
+  const job = await prisma.job.create({
+    data: {
+      title: 'Driver',
+      description: 'Driver for Routing',
+      isArchived: false,
+    },
+  });
+  const employee = await prisma.employee.create({
+    data: {
+      firstname: 'John',
+      middlename: 'M.',
+      lastname: 'Doe',
+      address: 'Davao City',
+      contactNumber: '09123456789',
+      employeeType: 'FULL_TIME',
+      employeeStatus: 'ACTIVE', 
+      account: {
+        create: {
+          username: 'username',
+          password: hashedPassword,
+          isArchived: false,
+        },
+      },
+    }
+  });
+  console.log(employee);
 }
 
 main()
