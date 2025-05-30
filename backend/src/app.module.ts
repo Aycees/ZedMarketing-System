@@ -7,10 +7,10 @@ import { JobsModule } from './jobs/jobs.module';
 import { JobCategoriesModule } from './job-categories/job-categories.module';
 import { AuthModule } from './auth/auth.module';
 import { EmployeesModule } from './employees/employees.module';
-
+import { AttendanceModule } from './attendances/attendance.module';
 
 @Module({
-  imports: [AccountsModule, SupabaseModule, AuthModule, JobsModule, JobCategoriesModule, EmployeesModule],
+  imports: [AccountsModule, SupabaseModule, AuthModule, JobsModule, JobCategoriesModule, EmployeesModule, AttendanceModule],
   controllers: [AppController],
   providers: [AppService],
 })
